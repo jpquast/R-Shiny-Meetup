@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.0.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Jan-Philipp Quast">
+
+<title>Summary of “Mastering Shiny” Chapter 2</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="Chapter 2_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Chapter 2_files/libs/quarto-html/quarto.js"></script>
+<script src="Chapter 2_files/libs/quarto-html/popper.min.js"></script>
+<script src="Chapter 2_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Chapter 2_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Chapter 2_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Chapter 2_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Chapter 2_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Chapter 2_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Chapter 2_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Summary of “Mastering Shiny” Chapter 2</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Jan-Philipp Quast </p>
+          </div>
+  </div>
+    
+    
+  </div>
+  
+
+</header>
+
+<p>This chapter mainly focuses on the UI of the app. It discusses input and outputs.</p>
+<section id="inputs" class="level2">
+<h2 class="anchored" data-anchor-id="inputs">Inputs</h2>
+<p>Every input functions first argument is the “ID” that identifies the specific value that the user provides to using the input method.</p>
+<p>The “ID” can be accessed on the server using <code>input$ID</code>.</p>
+<p>Most input functions also have the <code>label</code> argument which allows you to give the input method a label.</p>
+<p>In addition often a default value can be provided using the <code>value</code> argument.</p>
+<p>It is recommended to supply the <code>inputID</code> and <code>label</code> arguments by name and the other arguments by name.</p>
+<section id="text" class="level3">
+<h3 class="anchored" data-anchor-id="text">Text</h3>
+<ul>
+<li><p>Small amount of text: <a href="https://rdrr.io/pkg/shiny/man/textInput.html"><code>textInput()</code></a></p></li>
+<li><p>Passwords: <a href="https://rdrr.io/pkg/shiny/man/passwordInput.html"><code>passwordInput()</code></a></p></li>
+<li><p>Paragraphs: <a href="https://rdrr.io/pkg/shiny/man/textAreaInput.html"><code>textAreaInput()</code></a></p></li>
+</ul>
+</section>
+<section id="numeric-input" class="level3">
+<h3 class="anchored" data-anchor-id="numeric-input">Numeric input</h3>
+<ul>
+<li><p>Numeric textbox: <a href="https://rdrr.io/pkg/shiny/man/numericInput.html"><code>numericInput()</code></a></p></li>
+<li><p>Continuous slider: <a href="https://rdrr.io/pkg/shiny/man/sliderInput.html"><code>sliderInput()</code></a></p>
+<ul>
+<li>If length a length 2 vector is provided to the <code>value</code> argument of <a href="https://rdrr.io/pkg/shiny/man/sliderInput.html"><code>sliderInput()</code></a> a range input can be created.</li>
+</ul></li>
+</ul>
+</section>
+<section id="dates" class="level3">
+<h3 class="anchored" data-anchor-id="dates">Dates</h3>
+<ul>
+<li><p>Single date: <a href="https://rdrr.io/pkg/shiny/man/dateInput.html"><code>dateInput()</code></a></p></li>
+<li><p>Range of two dates: <a href="https://rdrr.io/pkg/shiny/man/dateRangeInput.html"><code>dateRangeInput()</code></a></p></li>
+</ul>
+</section>
+<section id="limited-choices" class="level3">
+<h3 class="anchored" data-anchor-id="limited-choices">Limited choices</h3>
+<ul>
+<li><p>Dropdown: <a href="https://rdrr.io/pkg/shiny/man/selectInput.html"><code>selectInput()</code></a></p>
+<ul>
+<li>Can have the <code>multiples</code> argument that allows you to select more than one.</li>
+</ul></li>
+<li><p>Radio buttons (only one option): <a href="https://rdrr.io/pkg/shiny/man/radioButtons.html"><code>radioButtons()</code></a></p></li>
+<li><p>Checkbox (multiple options): <a href="https://rdrr.io/pkg/shiny/man/checkboxGroupInput.html"><code>checkboxGroupInput()</code></a></p></li>
+</ul>
+</section>
+<section id="file-input" class="level3">
+<h3 class="anchored" data-anchor-id="file-input">File input</h3>
+<ul>
+<li>Upload a file: <a href="https://rdrr.io/pkg/shiny/man/fileInput.html"><code>fileInput()</code></a></li>
+</ul>
+</section>
+<section id="action-buttons" class="level3">
+<h3 class="anchored" data-anchor-id="action-buttons">Action buttons</h3>
+<p>Can be customized using the <code>class</code> argument.</p>
+<ul>
+<li><p><a href="https://rdrr.io/pkg/shiny/man/actionButton.html"><code>actionButton()</code></a></p></li>
+<li><p><a href="https://rdrr.io/pkg/shiny/man/actionButton.html"><code>actionLink()</code></a></p></li>
+</ul>
+<p>More about these in chapter 3.</p>
+</section>
+</section>
+<section id="outputs" class="level2">
+<h2 class="anchored" data-anchor-id="outputs">Outputs</h2>
+<p>Like inputs, outputs take a unique “ID” to identify them on the server side, where they are referred to with <code>output$ID</code>.</p>
+<p>Each output function is coupled with a render function on the server side.</p>
+<section id="text-1" class="level3">
+<h3 class="anchored" data-anchor-id="text-1">Text</h3>
+<ul>
+<li><p>Regular text: <a href="https://rdrr.io/pkg/shiny/man/textOutput.html"><code>textOutput()</code></a></p>
+<ul>
+<li><a href="https://rdrr.io/pkg/shiny/man/renderPrint.html"><code>renderText({})</code></a></li>
+</ul></li>
+<li><p>Code: <a href="https://rdrr.io/pkg/shiny/man/textOutput.html"><code>verbatimTextOutput()</code></a></p>
+<ul>
+<li><a href="https://rdrr.io/pkg/shiny/man/renderPrint.html"><code>renderPrint({})</code></a></li>
+</ul></li>
+</ul>
+</section>
+<section id="tables" class="level3">
+<h3 class="anchored" data-anchor-id="tables">Tables</h3>
+<ul>
+<li><p>Static table: <a href="https://rdrr.io/pkg/shiny/man/renderTable.html"><code>tableOutput()</code></a></p>
+<ul>
+<li><a href="https://rdrr.io/pkg/shiny/man/renderTable.html"><code>renderTable({})</code></a></li>
+</ul></li>
+<li><p>Dynamic table: <a href="https://rdrr.io/pkg/shiny/man/renderDataTable.html"><code>dataTableOutput()</code></a></p>
+<ul>
+<li><a href="%5D(https://rdrr.io/pkg/shiny/man/renderDataTable.html)"><code>renderDataTable({})</code></a></li>
+</ul></li>
+</ul>
+</section>
+<section id="plots" class="level3">
+<h3 class="anchored" data-anchor-id="plots">Plots</h3>
+<ul>
+<li><p><a href="https://rdrr.io/pkg/shiny/man/renderPlot.html"><code>plotOutput()</code></a></p>
+<ul>
+<li><a href="https://rdrr.io/pkg/shiny/man/renderPlot.html"><code>renderPlot({})</code></a></li>
+</ul></li>
+</ul>
+<p>Plots can also act as an input if the <code>click</code> argument is specified.</p>
+</section>
+<section id="downloads" class="level3">
+<h3 class="anchored" data-anchor-id="downloads">Downloads</h3>
+<ul>
+<li><p><a href="https://rdrr.io/pkg/shiny/man/downloadButton.html"><code>downloadButton()</code></a></p></li>
+<li><p><a href="https://rdrr.io/pkg/shiny/man/downloadButton.html"><code>downloadLink()</code></a></p></li>
+</ul>
+<p>More on them in chapter 9.</p>
+</section>
+</section>
+<section id="excercises" class="level2">
+<h2 class="anchored" data-anchor-id="excercises">Excercises</h2>
+<ol type="1">
+<li><p>When space is at a premium, it's useful to label text boxes using a placeholder that appears&nbsp;<em>inside</em>&nbsp;the text entry area. How do you call&nbsp;<a href="https://rdrr.io/pkg/shiny/man/textInput.html"><code>textInput()</code></a>&nbsp;to generate the UI below?</p>
+<p><img src="https://d33wubrfki0l68.cloudfront.net/0250dd2b285e770d5fd2a66670a6604775bb7f1e/eaa81/demos/basic-ui/placeholder.png" class="img-fluid"></p></li>
+<li><p>Carefully read the documentation for&nbsp;<a href="https://rdrr.io/pkg/shiny/man/sliderInput.html"><code>sliderInput()</code></a>&nbsp;to figure out how to create a date slider, as shown below.</p>
+<p><img src="https://d33wubrfki0l68.cloudfront.net/95326f3d91fd5e3c1eba0cfb8aa69a65f1cc0953/ae529/demos/basic-ui/date-slider.png" class="img-fluid"></p></li>
+<li><p>Create a slider input to select values between 0 and 100 where the interval between each selectable value on the slider is 5. Then, add animation to the input widget so when the user presses play the input widget scrolls through the range automatically.</p></li>
+<li><p>If you have a moderately long list in a&nbsp;<a href="https://rdrr.io/pkg/shiny/man/selectInput.html"><code>selectInput()</code></a>, it's useful to create sub-headings that break the list up into pieces. Read the documentation to figure out how. (Hint: the underlying HTML is called&nbsp;<code>&lt;optgroup&gt;</code>.)</p></li>
+<li><p>Which of&nbsp;<a href="https://rdrr.io/pkg/shiny/man/textOutput.html"><code>textOutput()</code></a>&nbsp;and&nbsp;<a href="https://rdrr.io/pkg/shiny/man/textOutput.html"><code>verbatimTextOutput()</code></a>&nbsp;should each of the following render functions be paired with?</p>
+<ol type="1">
+<li><p><code>renderPrint(summary(mtcars))</code></p></li>
+<li><p><code>renderText("Good morning!")</code></p></li>
+<li><p><code>renderPrint(t.test(1:5, 2:6))</code></p></li>
+<li><p><code>renderText(str(lm(mpg ~ wt, data = mtcars)))</code></p></li>
+</ol></li>
+<li><p>Re-create the Shiny app from Section&nbsp;<a href="https://mastering-shiny.org/basic-ui.html#plots">2.3.3</a>, this time setting height to 300px and width to 700px. Set the plot "alt" text so that a visually impaired user can tell that its a scatterplot of five random numbers.</p></li>
+<li><p>Update the options in the call to&nbsp;<a href="https://rdrr.io/pkg/shiny/man/renderDataTable.html"><code>renderDataTable()</code></a>&nbsp;below so that the data is displayed, but all other controls are suppress (i.e.&nbsp;remove the search, ordering, and filtering commands). You'll need to read&nbsp;<a href="https://rdrr.io/pkg/shiny/man/renderDataTable.html"><code>?renderDataTable</code></a>&nbsp;and review the options at&nbsp;<a href="https://datatables.net/reference/option/" class="uri">https://datatables.net/reference/option/</a>.</p></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dataTableOutput</span>(<span class="st">"table"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output, session) {</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>table <span class="ot">&lt;-</span> <span class="fu">renderDataTable</span>(mtcars, <span class="at">options =</span> <span class="fu">list</span>(<span class="at">pageLength =</span> <span class="dv">5</span>))</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="8" type="1">
+<li>Alternatively, read up on&nbsp;<a href="https://glin.github.io/reactable">reactable</a>, and convert the above app to use it instead.</li>
+</ol>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      let href = ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

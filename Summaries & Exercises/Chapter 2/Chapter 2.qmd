@@ -1,0 +1,148 @@
+---
+title: 'Summary of "Mastering Shiny" Chapter 2'
+author: "Jan-Philipp Quast"
+format: html
+editor: visual
+---
+
+This chapter mainly focuses on the UI of the app. It discusses input and outputs.
+
+## Inputs
+
+Every input functions first argument is the "ID" that identifies the specific value that the user provides to using the input method.
+
+The "ID" can be accessed on the server using `input$ID`.
+
+Most input functions also have the `label` argument which allows you to give the input method a label.
+
+In addition often a default value can be provided using the `value` argument.
+
+It is recommended to supply the `inputID` and `label` arguments by name and the other arguments by name.
+
+### Text
+
+-   Small amount of text: [`textInput()`](https://rdrr.io/pkg/shiny/man/textInput.html)
+
+-   Passwords: [`passwordInput()`](https://rdrr.io/pkg/shiny/man/passwordInput.html)
+
+-   Paragraphs: [`textAreaInput()`](https://rdrr.io/pkg/shiny/man/textAreaInput.html)
+
+### Numeric input
+
+-   Numeric textbox: [`numericInput()`](https://rdrr.io/pkg/shiny/man/numericInput.html)
+
+-   Continuous slider: [`sliderInput()`](https://rdrr.io/pkg/shiny/man/sliderInput.html)
+
+    -   If length a length 2 vector is provided to the `value` argument of [`sliderInput()`](https://rdrr.io/pkg/shiny/man/sliderInput.html) a range input can be created.
+
+### Dates
+
+-   Single date: [`dateInput()`](https://rdrr.io/pkg/shiny/man/dateInput.html)
+
+-   Range of two dates: [`dateRangeInput()`](https://rdrr.io/pkg/shiny/man/dateRangeInput.html)
+
+### Limited choices
+
+-   Dropdown: [`selectInput()`](https://rdrr.io/pkg/shiny/man/selectInput.html)
+
+    -   Can have the `multiples` argument that allows you to select more than one.
+
+-   Radio buttons (only one option): [`radioButtons()`](https://rdrr.io/pkg/shiny/man/radioButtons.html)
+
+-   Checkbox (multiple options): [`checkboxGroupInput()`](https://rdrr.io/pkg/shiny/man/checkboxGroupInput.html)
+
+### File input
+
+-   Upload a file: [`fileInput()`](https://rdrr.io/pkg/shiny/man/fileInput.html)
+
+### Action buttons
+
+Can be customized using the `class` argument.
+
+-   [`actionButton()`](https://rdrr.io/pkg/shiny/man/actionButton.html)
+
+-   [`actionLink()`](https://rdrr.io/pkg/shiny/man/actionButton.html)
+
+More about these in chapter 3.
+
+## Outputs
+
+Like inputs, outputs take a unique "ID" to identify them on the server side, where they are referred to with `output$ID`.
+
+Each output function is coupled with a render function on the server side.
+
+### Text
+
+-   Regular text: [`textOutput()`](https://rdrr.io/pkg/shiny/man/textOutput.html)
+
+    -   [`renderText({})`](https://rdrr.io/pkg/shiny/man/renderPrint.html)
+
+-   Code: [`verbatimTextOutput()`](https://rdrr.io/pkg/shiny/man/textOutput.html)
+
+    -   [`renderPrint({})`](https://rdrr.io/pkg/shiny/man/renderPrint.html)
+
+### Tables
+
+-   Static table: [`tableOutput()`](https://rdrr.io/pkg/shiny/man/renderTable.html)
+
+    -   [`renderTable({})`](https://rdrr.io/pkg/shiny/man/renderTable.html)
+
+-   Dynamic table: [`dataTableOutput()`](https://rdrr.io/pkg/shiny/man/renderDataTable.html)
+
+    -   [`renderDataTable({})`](](https://rdrr.io/pkg/shiny/man/renderDataTable.html))
+
+### Plots
+
+-   [`plotOutput()`](https://rdrr.io/pkg/shiny/man/renderPlot.html)
+
+    -   [`renderPlot({})`](https://rdrr.io/pkg/shiny/man/renderPlot.html)
+
+Plots can also act as an input if the `click` argument is specified.
+
+### Downloads
+
+-   [`downloadButton()`](https://rdrr.io/pkg/shiny/man/downloadButton.html)
+
+-   [`downloadLink()`](https://rdrr.io/pkg/shiny/man/downloadButton.html)
+
+More on them in chapter 9.
+
+## Excercises
+
+1.  When space is at a premium, it\'s useful to label text boxes using a placeholder that appears *inside* the text entry area. How do you call [`textInput()`](https://rdrr.io/pkg/shiny/man/textInput.html) to generate the UI below?
+
+    ![](https://d33wubrfki0l68.cloudfront.net/0250dd2b285e770d5fd2a66670a6604775bb7f1e/eaa81/demos/basic-ui/placeholder.png)
+
+2.  Carefully read the documentation for [`sliderInput()`](https://rdrr.io/pkg/shiny/man/sliderInput.html) to figure out how to create a date slider, as shown below.
+
+    ![](https://d33wubrfki0l68.cloudfront.net/95326f3d91fd5e3c1eba0cfb8aa69a65f1cc0953/ae529/demos/basic-ui/date-slider.png)
+
+3.  Create a slider input to select values between 0 and 100 where the interval between each selectable value on the slider is 5. Then, add animation to the input widget so when the user presses play the input widget scrolls through the range automatically.
+
+4.  If you have a moderately long list in a [`selectInput()`](https://rdrr.io/pkg/shiny/man/selectInput.html), it\'s useful to create sub-headings that break the list up into pieces. Read the documentation to figure out how. (Hint: the underlying HTML is called `<optgroup>`.)
+
+5.  Which of [`textOutput()`](https://rdrr.io/pkg/shiny/man/textOutput.html) and [`verbatimTextOutput()`](https://rdrr.io/pkg/shiny/man/textOutput.html) should each of the following render functions be paired with?
+
+    1.  `renderPrint(summary(mtcars))`
+
+    2.  `renderText("Good morning!")`
+
+    3.  `renderPrint(t.test(1:5, 2:6))`
+
+    4.  `renderText(str(lm(mpg ~ wt, data = mtcars)))`
+
+6.  Re-create the Shiny app from Section [2.3.3](https://mastering-shiny.org/basic-ui.html#plots), this time setting height to 300px and width to 700px. Set the plot \"alt\" text so that a visually impaired user can tell that its a scatterplot of five random numbers.
+
+7.  Update the options in the call to [`renderDataTable()`](https://rdrr.io/pkg/shiny/man/renderDataTable.html) below so that the data is displayed, but all other controls are suppress (i.e. remove the search, ordering, and filtering commands). You\'ll need to read [`?renderDataTable`](https://rdrr.io/pkg/shiny/man/renderDataTable.html) and review the options at <https://datatables.net/reference/option/>.
+
+```{r}
+#| eval: false
+ui <- fluidPage(
+  dataTableOutput("table")
+)
+server <- function(input, output, session) {
+  output$table <- renderDataTable(mtcars, options = list(pageLength = 5))
+}
+```
+
+8.  Alternatively, read up on [reactable](https://glin.github.io/reactable), and convert the above app to use it instead.
