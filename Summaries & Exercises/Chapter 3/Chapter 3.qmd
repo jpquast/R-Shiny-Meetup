@@ -1,0 +1,237 @@
+---
+title: 'Summary of "Mastering Shiny" Chapter 3'
+author: "Jan-Philipp Quast"
+format: html
+editor: visual
+---
+
+This chapter mainly focuses on the server side of the app. You will learn what reactive programming is and how reactive expressions are used.
+
+## The server function
+
+Shiny invokes `server()` when a new session starts. This creates an own independent environment.
+
+This means that all variables created inside the function are isolated from the rest.
+
+### Input argument
+
+The input argument is a list-like object, that contains all the data of input IDs that the UI creates. The value can be accessed using `input$`.
+
+The `input` object is read-only as compared to an ordinary list! This it cannot be modified within the server function.
+
+```{r}
+#| eval: false
+server <- function(input, output, session) {
+  input$count <- 10  
+}
+
+shinyApp(ui, server)
+#> Error: Can't modify read-only reactive value 'count'
+```
+
+Since the browser is regarded as the single source of truth, modifying the input data would cause inconsistencies. Functions such as `updateSliderInput()` can actually be used to modify the state of an input ID from the server side.
+
+Another important property of inputs is that they can only be accessed from within a reactive environment.
+
+```{r}
+#| eval: false
+server <- function(input, output, session) {
+  message("The value of input$count is ", input$count)
+}
+
+shinyApp(ui, server)
+#> Error: Can't access reactive value 'count' outside of reactive consumer.
+#> ℹ Do you need to wrap inside reactive() or observer()?
+```
+
+### Output argument
+
+`output` is very similar to `input`: it\'s also a list-like object named according to the output ID. The main difference is that you use it for sending output instead of receiving input. You always use the `output` object in concert with a `render` function, as in the following simple example:
+
+```{r}
+#| eval: false
+ui <- fluidPage(
+  textOutput("greeting")
+)
+
+server <- function(input, output, session) {
+  output$greeting <- renderText("Hello human!")
+}
+```
+
+The render function sets up a reactive environment that tracks what inputs are used and it converts the output into HTML.
+
+Similar to the input you can only assign to the output from a render function.
+
+```{r}
+#| eval: false
+server <- function(input, output, session) {
+  output$greeting <- "Hello human"
+}
+shinyApp(ui, server)
+#> Error: Unexpected character object for output$greeting
+#> ℹ Did you forget to use a render function?
+```
+
+In addition you cannot read an output in the server function.
+
+```{r}
+#| eval: false
+server <- function(input, output, session) {
+  message("The greeting is ", output$greeting)
+}
+shinyApp(ui, server)
+#> Error: Reading from shinyoutput object is not allowed.
+```
+
+## Reactive programming
+
+The real selling point of Shiny is reactive programming. It is harder to get used to than conventional programming but allows for a unique way of displaying and interacting with data.
+
+A render function is executed every time its inputs update.
+
+The app works because the code doesn\'t *tell* Shiny to create the string and send it to the browser, but instead, it informs Shiny *how it could* create the string if it needs to. It\'s up to Shiny when (and even if!) the code should be run. It might be run as soon as the app launches, it might be quite a bit later; it might be run many times, or it might never be run! This isn\'t to imply that Shiny is capricious, only that it\'s Shiny\'s responsibility to decide when code is executed, not yours. Think of your app as providing Shiny with recipes, not giving it commands.
+
+### Imperative vs. declarative programming
+
+In **Imperative programming** you issue a command and it is executed, in **declarative** **programming** you describe your goals and rely on a program to decide when it is appropriate to execute the code.
+
+With imperative code you say \"Make me a sandwich\". With declarative code you say \"Ensure there is a sandwich in the refrigerator whenever I look inside of it\". Imperative code is assertive; declarative code is passive-aggressive.
+
+### Laziness
+
+The strength of declarative programming is that apps can be lazy, meaning they only execute code when they really need to.
+
+### The reactive graph
+
+It is possible to display **relative dependencies** in Shiny apps using a reactive graph. This allows you to assess whether there are unnecessary executions in your app and how inputs and outputs are connected.
+
+It is important to keep in mind that the order of executions is only dependent on the reactive graph meaning that you can write the code in a random order. This is however not advisable since it is confusing.
+
+## Reactive expressions
+
+Reactive expressions are important because they give *Shiny* more information so that it can do less recomputation when inputs change, making apps more efficient, and they make it easier for *humans* to understand the app by simplifying the reactive graph. Reactive expressions have a flavour of both inputs and outputs:
+
+-   Like inputs, you can use the results of a reactive expression in an output.
+
+-   Like outputs, reactive expressions depend on inputs and automatically know when they need updating.
+
+Reactive expressions allow you to decouple inputs and outputs and to add an intermediate step.
+
+The huge benefit is that one input is processed in the same way but for two different output types (e.g. plot and table), the processing can be performed only once in a reactive expression and then provided to both outputs. This also ensures that both outputs receive the exact same result, which would not be the case if random number generation is involved.
+
+It is very important to avoid duplication of code especially in Shiny apps, since here it will substantially contribute to the running speed of your app.
+
+```{r}
+#| eval: false
+var1 <- reactive({
+  # some code
+})
+
+output$id <- var1()
+```
+
+## Controlling timing of evaluation
+
+The frequency of updates of a Shiny app can be controlled by the [`reactiveTimer()`](https://rdrr.io/pkg/shiny/man/reactiveTimer.html) function.
+
+This reactive expression has a dependency on a hidden input, the current time. Like this you can make an output update e.g. every 500 ms.
+
+```{r}
+#| eval: false
+server <- function(input, output, session) {
+  timer <- reactiveTimer(500)
+  
+  x1 <- reactive({
+    timer()
+    rpois(input$n, input$lambda1)
+  })
+  x2 <- reactive({
+    timer()
+    rpois(input$n, input$lambda2)
+  })
+  
+  output$hist <- renderPlot({
+    freqpoly(x1(), x2(), binwidth = 1, xlim = c(0, 40))
+  }, res = 96)
+}
+```
+
+It is important to keep in mind that the actual code takes longer than 500 ms to run. In that case there would be a large backlog building up over time. In these cases it is a lot better to use a button instead since the user can update the app when they desire to do so.
+
+Buttons can be included in the UI with the [`actionButton()`](https://rdrr.io/pkg/shiny/man/actionButton.html) function.
+
+```{r}
+#| eval: false
+ui <- fluidPage(
+  fluidRow(
+    column(3, 
+      numericInput("lambda1", label = "lambda1", value = 3),
+      numericInput("lambda2", label = "lambda2", value = 5),
+      numericInput("n", label = "n", value = 1e4, min = 0),
+      actionButton("simulate", "Simulate!")
+    ),
+    column(9, plotOutput("hist"))
+  )
+)
+```
+
+The button can be used by referring to it in a render function if it should be updateable **in addition** to the other input updates!
+
+```{r}
+#| eval: false
+server <- function(input, output, session) {
+  x1 <- reactive({
+    input$simulate
+    rpois(input$n, input$lambda1)
+  })
+  x2 <- reactive({
+    input$simulate
+    rpois(input$n, input$lambda2)
+  })
+  output$hist <- renderPlot({
+    freqpoly(x1(), x2(), binwidth = 1, xlim = c(0, 40))
+  }, res = 96)
+}
+```
+
+If the button should be the only way of updating code we need to use [`eventReactive()`](https://rdrr.io/pkg/shiny/man/observeEvent.html)`.`
+
+```{r}
+#| eval: false
+server <- function(input, output, session) {
+  x1 <- eventReactive(input$simulate, {
+    rpois(input$n, input$lambda1)
+  })
+  x2 <- eventReactive(input$simulate, {
+    rpois(input$n, input$lambda2)
+  })
+
+  output$hist <- renderPlot({
+    freqpoly(x1(), x2(), binwidth = 1, xlim = c(0, 40))
+  }, res = 96)
+}
+```
+
+## Observers
+
+In contrast to render and reactive functions, observers are called for their side effects. They are not assigned to an output.
+
+[`observeEvent()`](https://rdrr.io/pkg/shiny/man/observeEvent.html) can be used in combination with an input to trigger a side effect. The code bellow will print a message to the console every time `input$name` is updated.
+
+```{r}
+#| eval: false
+ui <- fluidPage(
+  textInput("name", "What's your name?"),
+  textOutput("greeting")
+)
+
+server <- function(input, output, session) {
+  string <- reactive(paste0("Hello ", input$name, "!"))
+  
+  output$greeting <- renderText(string())
+  observeEvent(input$name, {
+    message("Greeting performed")
+  })
+}
+```
