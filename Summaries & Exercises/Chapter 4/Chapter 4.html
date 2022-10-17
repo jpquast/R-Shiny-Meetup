@@ -136,13 +136,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"neiss"</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in dir.create("neiss"): 'neiss' already exists</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>download <span class="ot">&lt;-</span> <span class="cf">function</span>(name) {</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  url <span class="ot">&lt;-</span> <span class="st">"https://github.com/hadley/mastering-shiny/raw/master/neiss/"</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">download.file</span>(<span class="fu">paste0</span>(url, name), <span class="fu">paste0</span>(<span class="st">"neiss/"</span>, name), <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">download</span>(<span class="st">"injuries.tsv.gz"</span>)</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">download</span>(<span class="st">"population.tsv"</span>)</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">download</span>(<span class="st">"products.tsv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># The bellow code does not work for some reason. One has to manually download the files.</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>download <span class="ot">&lt;-</span> <span class="cf">function</span>(name) {</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  url <span class="ot">&lt;-</span> <span class="st">"https://github.com/hadley/mastering-shiny/tree/main/neiss/"</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">download.file</span>(<span class="fu">paste0</span>(url, <span class="st">"/"</span>, name), <span class="fu">paste0</span>(<span class="st">"neiss/"</span>, name), <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">download</span>(<span class="st">"injuries.tsv.gz"</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">download</span>(<span class="st">"population.tsv"</span>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">download</span>(<span class="st">"products.tsv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The data can be loaded using the <code>vroom</code> package.</p>
 <div class="cell">
@@ -239,7 +240,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <p><img src="https://d33wubrfki0l68.cloudfront.net/35c1766902243f1fc9fa1aa92c6a57bd9eb31ccd/382fd/basic-case-study_files/figure-html/toilets-rate-1.png" class="img-fluid"></p>
 <p>The difference between men and women is much smaller, and we no longer see a decrease. This is because women tend to live longer than men, so at older ages there are simply more women alive to be injured by toilets.</p>
-<p>(Note that the rates only go up to age 80 because I couldn't find population data for ages over 80.)</p>
+<p>(Note that the rates only go up to age 80 because I couldn’t find population data for ages over 80.)</p>
 <p>We can also check some narratives:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>selected <span class="sc">%&gt;%</span> </span>
@@ -259,7 +260,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="the-app" class="level2">
 <h2 class="anchored" data-anchor-id="the-app">The app</h2>
 <p>It is strongly recommended to sketch out an app before starting to write code. This should be done for both the UI and also the server function (which is mainly dependent on your UI and what you want it to do).</p>
-<p>Often it's a good idea to spend a little time cleaning up your analysis code before you start your Shiny app, so you can think about these problems in regular R code, before you add the additional complexity of reactivity.</p>
+<p>Often it’s a good idea to spend a little time cleaning up your analysis code before you start your Shiny app, so you can think about these problems in regular R code, before you add the additional complexity of reactivity.</p>
 <p>We can create a function that makes nice looking tables lumping together results when there are more than 5 categories:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>count_top <span class="ot">&lt;-</span> <span class="cf">function</span>(df, var, <span class="at">n =</span> <span class="dv">5</span>) {</span>
