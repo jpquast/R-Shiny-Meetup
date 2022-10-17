@@ -83,30 +83,22 @@ server <- function(input, output, session) {
   })
   
   # render narrative
-  # Problems:
-  # Should not include index 0
-  prev_i <- -1
   narrative_sample <- eventReactive(
     list(input$next_s, input$prev_s, select_narrative()),{
     i <- input$next_s[1] - input$prev_s[1] 
-    # exclude 0 with prev_i
-    # code ?
+    # exclude 0
+    if (i >= 0){
+      i <- i + 1
+    }
     print(paste0("index: ", i))
     n_narratives <- length(select_narrative())
     print(paste0("length narrative: ", n_narratives))
-    multiples <- abs(floor(i/n_narratives))
-    print(paste0("multiples: ", multiples))
     if (i > 0){
-      result <- select_narrative()[i - (multiples * n_narratives)]
+      result <- select_narrative()[i %% n_narratives]
     }
     if (i < 0){
-      result <- select_narrative()[(multiples * n_narratives) + i]
+      result <- select_narrative()[i %% n_narratives + 1]
     }
-    if (i == 0){
-      result <- ""
-    }
-    prev_i <<- input$next_s[1] - input$prev_s[1]
-    print(paste0("prev_i: ", prev_i))
     result
     }
   )
