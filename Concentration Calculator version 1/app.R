@@ -14,6 +14,8 @@ chebi <- read.csv("chebi.csv")
 
 chebi_type_accessions <- unique(chebi$type_accession)[!is.na(unique(chebi$type_accession))]
 
+chebi_name_id <- unique(chebi$name)[!is.na(unique(chebi$name))]
+
 # Define UI
 ui <- fluidPage(
   navbarPage("Concentration Calculator",
@@ -75,7 +77,9 @@ ui <- fluidPage(
 tabPanel("ChEBI database",
            sidebarPanel(h3("Parameters"),
                         selectizeInput("type_accession", "Type accession", choices = chebi_type_accessions),
-                        textInput("accession_number", "Accession number")),
+                        textInput("accession_number", "Accession number"),
+                        selectizeInput("chebi_name", "ChEBI name", selected = NULL, choices = NULL),
+                        textInput("chebi_id", "ChEBI ID")),
          mainPanel(verbatimTextOutput("chebi_names"))
 )
 )
@@ -114,17 +118,63 @@ server <- function(input, output, session){
     }
   })
   
-  output$chebi_name <- renderPrint({
-    if(input$accession_number == "" | input$type_accession == ""){
+  updateSelectizeInput(session, 'chebi_name', choices = chebi_name_id, selected = NULL, server = TRUE, options = list(maxOptions = 100))
+
+  output$chebi_names <- renderPrint({
+    message("db accession number was run")
+    if((input$accession_number == "" | input$type_accession == "") & input$chebi_name == "" & input$chebi_id == ""){
       return(NULL)
     }
-    result <- chebi %>% 
-      filter(type_accession == input$type_accession) %>% 
-      filter(accession_number == input$accession_number) %>% 
-      distinct(name)
+
+    if(!(input$accession_number == "" | input$type_accession == "")){
+    result <- chebi %>%
+      filter(type_accession == input$type_accession) %>%
+      filter(accession_number == input$accession_number) %>%
+      distinct(chebi_accession, name, formula, mass, charge, monoisotopic_mass) 
+    }
+    
+    if(input$chebi_name != ""){
+      result <- chebi %>%
+        filter(name == input$chebi_name) %>%
+        distinct(chebi_accession, name, formula, mass, charge, monoisotopic_mass) 
+    }
+    
+    if(input$chebi_id != ""){
+      result <- chebi %>%
+        filter(chebi_accession == input$chebi_id) %>%
+        distinct(chebi_accession, name, formula, mass, charge, monoisotopic_mass) 
+    }
     
     print(result)
   })
+  
+  
+  
+  # output$chebi_names <- renderPrint({
+  #   message("chebi_name was run")
+  #   if(input$chebi_name == ""){
+  #     return(NULL)
+  #   }
+  #   
+  #   result <- chebi %>%
+  #     filter(name == input$chebi_name) %>%
+  #     distinct(chebi_accession, name, formula, mass, charge, monoisotopic_mass) 
+  #   
+  #   print(result)
+  # })
+  # 
+  # output$chebi_names <- renderPrint({
+  #   message("chebi_id was run")
+  #   if(input$chebi_id == ""){
+  #     return(NULL)
+  #   }
+  #   
+  #   result <- chebi %>%
+  #     filter(chebi_accession == input$chebi_id) %>%
+  #     distinct(chebi_accession, name, formula, mass, charge, monoisotopic_mass) 
+  #   
+  #   print(result)
+  # })
   
   
 }
